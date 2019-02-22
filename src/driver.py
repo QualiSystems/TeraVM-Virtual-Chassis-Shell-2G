@@ -20,9 +20,9 @@ from cloudshell.traffic.teravm.vchassis.configuration_attributes_structure impor
 
 VCENTER_RESOURCE_USER_ATTR = "User"
 VCENTER_RESOURCE_PASSWORD_ATTR = "Password"
-PORT_MAC_ADDRESS_ATTR = "MAC Address"
+PORT_MAC_ADDRESS_ATTR = "CS_VirtualTrafficGeneratorPort.MAC Address"
 SSH_SESSION_POOL = 1
-ASSOCIATED_MODELS = ["TeraVM Virtual Traffic Generator Module"]
+ASSOCIATED_MODELS = ["TeraVM Virtual Blade.VirtualTrafficGeneratorModule"]
 SERVICE_STARTING_TIMEOUT = 60 * 60
 SSH_STARTING_TIMEOUT = 60 * 60
 MGMT_IP_TIMEOUT = 30 * 60
@@ -283,19 +283,19 @@ if __name__ == "__main__":
 
     context = ResourceCommandContext()
     context.resource = ResourceContextDetails()
-    context.resource.name = 'tvm_c_3_0718-0e97'
-    context.resource.fullname = 'tvm_c_3_0718-0e97'
+    context.resource.name = "TVM-C-14.1_db2e-ccbb"
+    context.resource.fullname = "TVM-C-14.1_db2e-ccbb"
     context.reservation = ReservationContextDetails()
-    context.reservation.reservation_id = '0cc17f8c-75ba-495f-aeb5-df5f0f9a0e97'
+    context.reservation.reservation_id = "f49c75a2-860d-446d-b912-6cc99531ccbb"
     context.resource.attributes = {}
 
     for attr, value in [("User", user),
                         ("Password", password),
-                        ("API User", password),
+                        ("API User", user),
                         ("API Password", password),
-                        ("TVM Comms Network", password),
-                        ("TVM MGMT Network", password),
-                        ("Executive Server", password)]:
+                        ("TVM Comms Network", "TVM_Comms"),
+                        ("TVM MGMT Network", "VM Network"),
+                        ("Executive Server", "192.168.42.177")]:
 
         context.resource.attributes["{}.{}".format(TeraVMVirtualChassisDriver.SHELL_NAME, attr)] = value
 
@@ -315,9 +315,10 @@ if __name__ == "__main__":
         }))
 
     context.connectivity = mock.MagicMock()
-    context.connectivity.server_address = "192.168.85.37"
+    context.connectivity.server_address = "192.168.85.22"
 
     dr = TeraVMVirtualChassisDriver()
     dr.initialize(context)
+
     print dr.configure_device_command(context, "")
 
