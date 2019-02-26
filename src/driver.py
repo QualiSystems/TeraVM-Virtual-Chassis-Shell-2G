@@ -12,23 +12,24 @@ from cloudshell.devices.driver_helper import get_logger_with_thread_id
 from cloudshell.shell.core.driver_context import AutoLoadDetails
 from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterface
 from cloudshell.traffic.teravm.api.client import TeraVMClient
+from cloudshell.traffic.teravm.vchassis.configuration_attributes_structure import TeraVMTrafficGeneratorVChassisResource
+from cloudshell.traffic.teravm.vchassis.runners.configuration_runner import TeraVMConfigurationRunner
 from pyVim.connect import SmartConnect, Disconnect
 
-from cloudshell.traffic.teravm.vchassis.runners.configuration_runner import TeraVMConfigurationRunner
-from cloudshell.traffic.teravm.vchassis.configuration_attributes_structure import TrafficGeneratorVChassisResource
 
 
 VCENTER_RESOURCE_USER_ATTR = "User"
 VCENTER_RESOURCE_PASSWORD_ATTR = "Password"
 PORT_MAC_ADDRESS_ATTR = "CS_VirtualTrafficGeneratorPort.MAC Address"
 SSH_SESSION_POOL = 1
-ASSOCIATED_MODELS = ["TeraVM Virtual Blade.VirtualTrafficGeneratorModule"]
+ASSOCIATED_MODELS = ["TeraVM Virtual Blade"]
 SERVICE_STARTING_TIMEOUT = 60 * 60
 SSH_STARTING_TIMEOUT = 60 * 60
 MGMT_IP_TIMEOUT = 30 * 60
 
 
 class TeraVMVirtualChassisDriver(ResourceDriverInterface):
+    SHELL_TYPE = "CS_VirtualTrafficGeneratorChassis"
     SHELL_NAME = "TeraVM Virtual Chassis"
 
     def __init__(self):
@@ -166,8 +167,9 @@ class TeraVMVirtualChassisDriver(ResourceDriverInterface):
         with ErrorHandlingContext(logger):
             cs_api = get_api(context)
 
-            resource_config = TrafficGeneratorVChassisResource.from_context(context=context,
-                                                                            shell_name=self.SHELL_NAME)
+            resource_config = TeraVMTrafficGeneratorVChassisResource.from_context(context=context,
+                                                                                  shell_type=self.SHELL_TYPE,
+                                                                                  shell_name=self.SHELL_NAME)
 
             # get VM uuid of the Deployed App
             deployed_vm_resource = cs_api.GetResourceDetails(resource_config.fullname)
@@ -295,22 +297,16 @@ if __name__ == "__main__":
                         ("API Password", password),
                         ("TVM Comms Network", "TVM_Comms"),
                         ("TVM MGMT Network", "VM Network"),
-                        ("Executive Server", "192.168.42.177")]:
+                        ("Executive Server", "192.168.42.177"),
+                        ("License Server", "192.168.42.164")]:
 
         context.resource.attributes["{}.{}".format(TeraVMVirtualChassisDriver.SHELL_NAME, attr)] = value
 
-    context.resource.attributes['User'] = user
-    context.resource.attributes['Password'] = password
-    context.resource.attributes['API User'] = api_user
-    context.resource.attributes['API Password'] = api_password
-    context.resource.attributes['TVM Comms Network'] = "TVM_Comms_VLAN_99"
-    context.resource.attributes['TVM MGMT Network'] = "TVM_Mgmt"
-    context.resource.attributes['Executive Server'] = "192.168.42.220"
     context.resource.address = address
     context.resource.app_context = mock.MagicMock(app_request_json=json.dumps(
         {
             "deploymentService": {
-                "cloudProviderName": "vcenter_333"
+                "cloudProviderName": "vcenter"
             }
         }))
 

@@ -17,8 +17,6 @@ node_types:
   vendor.switch.TeraVM Virtual Chassis:
     derived_from: cloudshell.nodes.VirtualTrafficGeneratorChassis
     properties:
-#      License Server:
-#        type: string
       Executive Server:
         type: string
       TVM Comms Network:
@@ -31,10 +29,6 @@ node_types:
         type: string
       API Password:
         type: cloudshell.datatypes.Password
-#      User:
-#        type: string
-#      Password:
-#        type: cloudshell.datatypes.Password
     capabilities:
       auto_discovery_capability:
         type: cloudshell.capabilities.AutoDiscovery
