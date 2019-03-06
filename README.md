@@ -63,13 +63,13 @@ The families and models of the vChassis are listed in the following table:
 
 |Family|Model|Description|
 |:---|:---|:---|
-|Virtual Traffic Generator Chassis|TeraVM Chassis|TeraVM Deployed Controller|
-|Module|TeraVM Virtual Traffic Generator Module|TeraVM Deployed Module|
-|Port|TeraVM Virtual Traffic Generator Port|Port on the Deployed TeraVM Module|
+|CS_VirtualTrafficGeneratorChassis|TeraVM Virtual Chassis|TeraVM Deployed Controller|
+|CS_VirtualTrafficGeneratorModule|TeraVM Virtual Blade|TeraVM Deployed Module|
+|CS_VirtualTrafficGeneratorPort|TeraVM Virtual Blade.VirtualTrafficGeneratorPort|Port on the Deployed TeraVM Module|
 
 #### **TeraVM Virtual Chassis Attributes**
 
-The attributes of the vChassis are listed in the following table:
+The attributes of the Virtual Chassis are listed in the following table:
 
 |Attribute|Type|Description|
 |:---|:---|:---|
@@ -82,16 +82,16 @@ The attributes of the vChassis are listed in the following table:
 |API Password|Password|API password for the Deployed TeraVM Controller|
 |API User|String|API username for the Deployed TeraVM Controller|
 
-#### **TeraVM Module Attributes (Virtual Blade)**
+#### **TeraVM Virtual Blade Attributes**
 
-The attributes of the vBlade are listed in the following table:
+The attributes of the Virtual Blade are listed in the following table:
 
 |Attribute|Type|Description|
 |:---|:---|:---|
 |TVM Comms Network|String|TeraVM Comms Network name in vCenter|
 |TVM MGMT Network|String|TeraVM Management Network name in vCenter|
 
-#### **TeraVM Port Attributes**
+#### **TeraVM Virtual Port Attributes**
 
 The attributes of the ports are listed in the following table:
 
@@ -115,24 +115,24 @@ For Traffic Generator shells, commands are configured and executed from the cont
 |Command|Description|
 |:-----|:-----|
 |Load Configuration|Loads the configuration file and reserves necessary ports.<br>* **TeraVM config file** (String) (Mandatory): The configuration file name. <br>Path should include the protocol type, for example *tftp://10.10.10.10/asdf*.<br>* **Use ports from reservation** (Enum): Possible values: **True** or **False**. <br>Updates the configuration file with ports from the current reservation based on their **Logical Name** attributes.
-|Start Traffic|Starts a test with the current configuration.|
-|Stop Traffic|Stops running the test.|
-|Get Results|Gets the test's result file and attaches it to the reservation.|
+|Start Test|Starts traffic test.|
+|Stop Test|Stops traffic test.|
+|Get Statistics|Gets the test result file and attaches it to the reservation.|
 
 # Downloading the Shell
-The TeraVM Virtual 1G shells are available from the [Quali Community Integrations](https://community.quali.com/integrations) page. 
+The **TeraVM Virtual 2G** shells are available from the [Quali Community Integrations](https://community.quali.com/integrations) page. 
 
 Download the files into a temporary location on your local machine. 
 
-The shells include:
+The shell comprises:
 
 |File name|Description|
 |:---|:---|
-|TeraVM_Controller_Shell_Package.zip|TeraVM Controller shell package|
-|teravm-vchassis.zip|TeraVM vChassis shell package|
-|teravm-vblade.zip|TeraVM vBlade shell package|
-|teravm-offline-package-1.0.0.zip|Shell Python dependencies (for offline deployments only)|
-|TeraVM.Sandbox.Setup.1.0.zip|CloudShell Reservation Setup script|
+|TeravmControllerShell2G.zip|TeraVM Controller 2G shell package|
+|TeraVM.Virtual.Chassis.zip|TeraVM Virtual Chassis 2G shell package|
+|TeraVM.Virtual.Blade.zip|TeraVM Virtual Blade 2G shell package|
+|teravm-offline-dependencies-1.0.0.zip|Shell Python dependencies (for offline deployments only)|
+|TeraVM.Sandbox.Setup.1.1.0.zip|CloudShell Reservation Setup script|
 
 # Importing and Configuring the Shell
 This section describes how to import the TeraVM Virtual shells and configure and modify the shell’s devices. 
@@ -187,7 +187,7 @@ For more information, see [Configuring CloudShell to Execute Python Commands in 
 Before PyPi Server was introduced as CloudShell’s python package management mechanism, the `PythonOfflineRepositoryPath` key was used to set the default offline package repository on the Quali Server machine, and could be used on specific Execution Server machines to set a different folder. 
 
 **To set the offline python repository:**
-1. Download the *teravm-offline-package-1.0.0* file, see [Downloading the Shell](#downloading-the-shell).
+1. Download the *teravm-offline-dependencies-1.0.0* file, see [Downloading the Shell](#downloading-the-shell).
 
 2. Unzip it to a local repository. Make sure the execution server has access to this folder. 
 
@@ -203,9 +203,9 @@ full path"/>`
 
 ### Configuring a new App
 
-#### Configuring a new App based on the TeraVM vBlade shell
+#### Configuring a new App based on the TeraVM Virtual Blade shell
 
-This section explains how to create an App template for the TeraVM vBlade shell (Module).
+This section explains how to create an App template for the TeraVM Virtual Blade shell (Module).
 
 1. In CloudShell Portal, as Global administrator, open the **Manage – Apps** page.
 
@@ -219,15 +219,15 @@ This section explains how to create an App template for the TeraVM vBlade shell 
 
 	![](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/blob/master/teravm_module_app_deployment.png)
 
-6. In the **App Resource** tab, select the **TeraVM Virtual Traffic Generator Module** shell and specify all required configuration attributes for this shell, see [TeraVM Module Attributes (vBlade)](#teravm-module-attributes-vblade).
+6. In the **App Resource** tab, select the **TeraVM Virtual Blade** shell and specify all required configuration attributes for this shell, see [TeraVM Virtual Blade Attributes](#teravm-virtual-blade-attributes).
 
-	![](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/blob/master/teravm_module_app_resource.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/docs/images/teravm_module_app_resource.png)
 
 7. Click **Done**.
 
-#### Configuring a new App based on the TeraVM vChassis shell
+#### Configuring a new App based on the TeraVM Virtual Chassis shell
 
-This section explains how to create an App template for the TeraVM vChassis shell.
+This section explains how to create an App template for the TeraVM Virtual Chassis shell.
 
 1. In CloudShell Portal, as Global administrator, open the **Manage – Apps** page.
 
@@ -239,31 +239,31 @@ This section explains how to create an App template for the TeraVM vChassis shel
 
 5. In the **Deployment Paths** tab, select the **Cloud Provider** and enter the **vCenter Template** to be used in VM creation. It should include the full path and template name, for example *QualiFolder/Template*. 
 
-	![](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/blob/master/teravm_chassis_app_deployment.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Chassis-Shell-2G/blob/master/docs/images/teravm_chassis_app_deployment.png)
 
-6. In the **App Resource** tab, select the **TeraVM vChassis** shell and specify all required configuration attributes for this shell, see [TeraVM vChassis Attributes](#teravm-vchassis-attributes).
+6. In the **App Resource** tab, select the **TeraVM Virtual Chassis** shell and specify all required configuration attributes for this shell, see [TeraVM Virtual Chassis Attributes](#teravm-virtual-chassis-attributes).
 	
-	![](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/blob/master/teravm_chassis_app_resource.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/docs/images/teravm_chassis_app_resource.png)
 	
 7. Click **Done**.
 
-### Configuring the TeraVM Controller 
+### Configuring the TeraVM Controller
 This section explains how to configure the **TeraVM Controller** service, which enables end users to conduct traffic tests using the TeraVM traffic generator.
 
 1. In your blueprint, add the **TeraVM Traffic Generator Controller** service. 
 	1. Click **App/Service**.
-	2. Select the **Traffic Generator Controller** category to view the list of controllers.
+	2. Select the **Traffic Generator Controllers** category to view the list of controllers.
 
-2. Click the plus sign next to the **TeraVM Traffic Generator Controller** to add the service into your diagram.
+2. Click the plus sign next to the **TeraVM Controller Shell 2G** to add the service into your diagram.
 
 3. In the **Add Service** dialog box, specify the **Test Files Location** attribute with the location where test files should be downloaded. All other attributes aren't required and can be left blank.
 
-	![](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/blob/master/teravm_controller_service.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/teravm_controller_service.png)
 
 3. Click **Add**.
 
 ### Configuring the setup script
-This section explains how to add the setup script for the **TeraVM Virtual** shells.
+This section explains how to add the setup script for the **TeraVM Virtual 2G** shells.
 
 **To add the setup script:**
 1. Log in to CloudShell Portal as administrator of the relevant domain.
@@ -272,7 +272,7 @@ This section explains how to add the setup script for the **TeraVM Virtual** she
 
 3. Click **Add New Script**. 
 
-4. From the list, select the downloaded setup script *TeraVM.Sandbox.Setup.1.0.zip*.
+4. From the list, select the downloaded setup script *TeraVM.Sandbox.Setup.1.1.0.zip*.
 
 5. Click **Edit** and change the **Script Type** to **Setup**.
 
