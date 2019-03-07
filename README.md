@@ -34,14 +34,14 @@ For more information see the official **TeraVM** product documentation.
 
 To model a TeraVM virtual device in CloudShell, use the following shells: 
 
-▪ [TeraVM Virtual Chassis Shell 2G](https://community.quali.com/repos/3401/cloudshell-teravm-vchassis-shell-1), which provides connectivity and management capabilities, such as device structure discovery and power management for the TeraVM vChassis.
+▪ [TeraVM Virtual Chassis Shell 2G](https://community.quali.com/repos/3401/cloudshell-teravm-vchassis-shell-1), which provides connectivity and management capabilities, such as device structure discovery and power management for the TeraVM Virtual Chassis.
 
-▪ [TeraVM Controller Shell 2G (Service)](https://community.quali.com/repos/3287/teravm-controller-shell), which provides automation commands to run on the vChassis, such as Load Test Configuration, Start Traffic, Get Statistics.
+▪ [TeraVM Controller Shell 2G (Service)](https://community.quali.com/repos/3287/teravm-controller-shell), which provides automation commands to run on the Virtual Chassis, such as Load Test Configuration, Start Traffic, Get Statistics.
 
-▪ [TeraVM Virtual Blade Shell 2G](https://community.quali.com/repos/3403/cloudshell-teravm-vblade-shell), which provides connectivity and management capabilities such as device structure discovery and power management for the CloudShell TeraVM vBlade.
+▪ [TeraVM Virtual Blade Shell 2G](https://community.quali.com/repos/3403/cloudshell-teravm-vblade-shell), which provides connectivity and management capabilities such as device structure discovery and power management for the CloudShell TeraVM Virtual Blade.
 
 ### Standard version
-The TeraVM Virtual 2G shells are based on the Virtual Traffic Generator Standard 1.0.0.
+The TeraVM Virtual 2G shells are based on the Traffic Generator Chassis Standard 1.0.0.
 
 For detailed information about the shell’s structure and attributes, see the [Traffic Shell standard](https://github.com/QualiSystems/shell-traffic-standard/blob/master/spec/traffic_standard.md) in GitHub.
 
@@ -51,7 +51,7 @@ Release: **TeraVM Virtual 2G Shells**
 
 ▪ TeraVM versions: 14.1 and above
 
-▪ CloudShell version: 8.2 and above
+▪ CloudShell version: 8.0 Patch 8, 8.2 Patch 1, 8.3 and above
 
 ### Data Model
 
@@ -217,7 +217,7 @@ This section explains how to create an App template for the TeraVM Virtual Blade
 
 5. In the **Deployment Paths** tab, select the **Cloud Provider** and enter the **vCenter Template** to be used in VM creation. It should include the full path and template name, for example *QualiFolder/Template*. 
 
-	![](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/blob/master/teravm_module_app_deployment.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade/blob/master/docs/images/teravm_module_app_deployment.png)
 
 6. In the **App Resource** tab, select the **TeraVM Virtual Blade** shell and specify all required configuration attributes for this shell, see [TeraVM Virtual Blade Attributes](#teravm-virtual-blade-attributes).
 
@@ -243,7 +243,7 @@ This section explains how to create an App template for the TeraVM Virtual Chass
 
 6. In the **App Resource** tab, select the **TeraVM Virtual Chassis** shell and specify all required configuration attributes for this shell, see [TeraVM Virtual Chassis Attributes](#teravm-virtual-chassis-attributes).
 	
-	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/docs/images/teravm_chassis_app_resource.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Chassis-Shell-2G/blob/master/docs/images/teravm_chassis_app_resource.png)
 	
 7. Click **Done**.
 
@@ -256,7 +256,7 @@ This section explains how to configure the **TeraVM Controller** service, which 
 
 2. Click the plus sign next to the **TeraVM Controller Shell 2G** to add the service into your diagram.
 
-3. In the **Add Service** dialog box, specify the **Test Files Location** attribute with the location where test files should be downloaded. All other attributes aren't required and can be left blank.
+3. In the **Add Service** dialog box all attributes aren't required and can be left blank.
 
 	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/teravm_controller_service.png)
 
@@ -306,14 +306,14 @@ In online mode, the execution server automatically downloads and extracts the ap
 2. Add Apps and Services to the blueprint. 
    1. Click **App/Services** from the toolbar.
    2. Add the following to the diagram:
-   		* **TeraVM Traffic Generator Controller** service - see [Configuring the TeraVM Controller](#configuring-the-teravm-controller) for more information.
-		* **TeraVM vChassis** App
-		* **TeraVM vBlade** App
+   		* **TeraVM Controller Shell 2G** service - see [Configuring the TeraVM Controller](#configuring-the-teravm-controller) for more information.
+		* **TeraVM Virtual Chassis** App
+		* **TeraVM Virtual Blade** App
 	
 3. Update the blueprint setup script.
    1. Open the blueprint's properties, **Blueprint>Properties**. 
    2. In the **Scripts** section, remove the **Default Sandbox Setup 2.0** script by clicking the trash icon.
-   3. Click **Add Script** and select **TeraVM.Sandbox.Setup.1.0** from the list. 
+   3. Click **Add Script** and select **TeraVM.Sandbox.Setup.1.1.0** from the list. 
    4. Click **Update** to save changes.
    
 4. In the blueprint workspace, click the **Reserve** button to deploy the **TeraVM Controller** and **TeraVM Module**. <br>You can now run your testing activity using the TeraVM traffic generator you spun up, as explained in the following workflow.
@@ -321,18 +321,17 @@ In online mode, the execution server automatically downloads and extracts the ap
 **Workflow 2** - *Running a test* 
 1. Reserve a blueprint that is configured to run traffic tests, like the one configured in Workflow 1.
 
-2. From the **TeraVM Traffic Generator Controller** service, run the **Load Configuration** command.
-   1. Hover over the **TeraVM Traffic Generator Controller** service and click **Commands**.
+2. From the **TeraVM Controller Shell 2G** service, run the **Load Configuration** command.
+   1. Hover over the **TeraVM Controller Shell 2G** service and click **Commands**.
    2. In the **Resource Commands** pane, click the **Load Configuration** command.
-   3. Specify the **TeraVM config file** with the path of your test configuration file. <br>It can be a full path, or relative path under the location specified in the attribute **Test Files Location**, such as *<reservation_id>/test_name.bpt* or
-only *test_name.bpt*. Make sure the path is accessible to the execution server running the command.
+   3. Specify the **TeraVM config file** with the remote path of your test configuration file. Make sure the path is accessible to the execution server running the command.
    4. Click **Run**, to load the test configuration to the **TeraVM Controller** and reserve necessary ports.
    
-3. Run the **Start Test** command.
+3. Run the **Start Traffic** command.
 
-4. Run the **Stop Test** command.
+4. Run the **Stop Traffic** command.
 
-5. Run the **Get Result** command.
+5. Run the **Get Statistics** command.
     
    The test's result file is attached to the sandbox.
 
@@ -352,9 +351,9 @@ To connect with Quali users and experts from around the world, ask questions and
 
 For release updates, see the shell's GitHub release pages as follows:
 
-▪ [CloudShell TeraVM Virtual vChassis Shell release page](https://github.com/QualiSystems/cloudshell-tg-teravm-vchassis/releases)
+▪ [CloudShell TeraVM Virtual Chassis Shell 2G release page](https://github.com/QualiSystems/TeraVM-Virtual-Chassis-Shell-2G/releases)
 
-▪ [TeraVM Controller Shell (Service) release page](https://github.com/QualiSystems/TeraVM-Controller-Shell/releases)
+▪ [CloudShell TeraVM Controller Shell 2G (Service) release page](https://github.com/QualiSystems/TeraVM-Controller-Shell-2G/releases)
 
-▪ [CloudShell TeraVM vBlade Shell release page](https://github.com/QualiSystems/cloudshell-tg-teravm-vblade/releases)
+▪ [CloudShell TeraVM Virtual Blade Shell 2G release page](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/releases)
 
