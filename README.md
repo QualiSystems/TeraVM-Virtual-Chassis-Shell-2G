@@ -217,7 +217,7 @@ This section explains how to create an App template for the TeraVM Virtual Blade
 
 5. In the **Deployment Paths** tab, select the **Cloud Provider** and enter the **vCenter Template** to be used in VM creation. It should include the full path and template name, for example *QualiFolder/Template*. 
 
-	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade/blob/master/docs/images/teravm_module_app_deployment.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/docs/images/teravm_module_app_deployment.png)
 
 6. In the **App Resource** tab, select the **TeraVM Virtual Blade** shell and specify all required configuration attributes for this shell, see [TeraVM Virtual Blade Attributes](#teravm-virtual-blade-attributes).
 
@@ -258,7 +258,7 @@ This section explains how to configure the **TeraVM Controller** service, which 
 
 3. In the **Add Service** dialog box all attributes aren't required and can be left blank.
 
-	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/teravm_controller_service.png)
+	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/docs/images/teravm_controller_service.png)
 
 3. Click **Add**.
 
