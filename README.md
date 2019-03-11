@@ -36,7 +36,7 @@ To model a TeraVM virtual device in CloudShell, use the following shells:
 
 ▪ [TeraVM Virtual Chassis Shell 2G](https://community.quali.com/repos/3401/cloudshell-teravm-vchassis-shell-1), which provides connectivity and management capabilities, such as device structure discovery and power management for the TeraVM Virtual Chassis.
 
-▪ [TeraVM Controller Shell 2G (Service)](https://community.quali.com/repos/3287/teravm-controller-shell), which provides automation commands to run on the Virtual Chassis, such as Load Test Configuration, Start Traffic, Get Statistics.
+▪ [TeraVM Controller Shell 2G (Service)](https://community.quali.com/repos/4365/teravm-controller-2-gen-shell), which provides automation commands to run on the Virtual Chassis, such as Load Test Configuration, Start Traffic, Get Statistics.
 
 ▪ [TeraVM Virtual Blade Shell 2G](https://community.quali.com/repos/3403/cloudshell-teravm-vblade-shell), which provides connectivity and management capabilities such as device structure discovery and power management for the CloudShell TeraVM Virtual Blade.
 
@@ -256,7 +256,7 @@ This section explains how to configure the **TeraVM Controller** service, which 
 
 2. Click the plus sign next to the **TeraVM Controller Shell 2G** to add the service into your diagram.
 
-3. In the **Add Service** dialog box all attributes aren't required and can be left blank.
+3. In the **Add Service** dialog box, you are not required to configure any of the attributes, and can therefore be left blank.
 
 	![](https://github.com/QualiSystems/TeraVM-Virtual-Blade-Shell-2G/blob/master/docs/images/teravm_controller_service.png)
 
