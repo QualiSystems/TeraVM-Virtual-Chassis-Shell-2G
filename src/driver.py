@@ -1,4 +1,5 @@
 import cPickle
+import httplib
 from datetime import datetime
 from datetime import timedelta
 import json
@@ -15,7 +16,7 @@ from cloudshell.traffic.teravm.api.client import TeraVMClient
 from cloudshell.traffic.teravm.vchassis.configuration_attributes_structure import TeraVMTrafficGeneratorVChassisResource
 from cloudshell.traffic.teravm.vchassis.runners.configuration_runner import TeraVMConfigurationRunner
 from pyVim.connect import SmartConnect, Disconnect
-
+from requests.exceptions import HTTPError
 
 
 VCENTER_RESOURCE_USER_ATTR = "User"
@@ -24,6 +25,7 @@ PORT_MAC_ADDRESS_ATTR = "CS_VirtualTrafficGeneratorPort.MAC Address"
 SSH_SESSION_POOL = 1
 ASSOCIATED_MODELS = ["TeraVM Virtual Blade"]
 SERVICE_STARTING_TIMEOUT = 60 * 60
+API_STARTING_TIMEOUT = 30 * 60
 SSH_STARTING_TIMEOUT = 60 * 60
 MGMT_IP_TIMEOUT = 30 * 60
 
@@ -104,6 +106,36 @@ class TeraVMVirtualChassisDriver(ResourceDriverInterface):
                                 .format(SERVICE_STARTING_TIMEOUT / 60))
             time.sleep(10)
 
+    def _configure_executive_server(self, resource_config, tvm_api_client, logger):
+        """
+
+        :param resource_config:
+        :param tvm_api_client:
+        :param logger:
+        :return:
+        """
+        timeout_time = datetime.now() + timedelta(seconds=API_STARTING_TIMEOUT)
+
+        while True:
+            logger.exception("Trying to configure Executive Server via API....")
+
+            try:
+                tvm_api_client.configure_executive_server(ip_addr=resource_config.executive_server)
+            except HTTPError as e:
+                if e.response.status_code == httplib.BAD_GATEWAY:
+                    logger.exception("Unable to configure Executive Server via API")
+
+                    if datetime.now() > timeout_time:
+                        raise Exception("Unable to perform configure Executive Server API operation within {} minute(s)"
+                                        .format(API_STARTING_TIMEOUT / 60))
+                else:
+                    raise
+            else:
+                logger.exception("Executive Server was successfully configured via API")
+                return
+
+            time.sleep(5 * 60)
+
     def _execute_cli_configuration(self, resource_config, cs_api, logger):
         """
 
@@ -115,7 +147,7 @@ class TeraVMVirtualChassisDriver(ResourceDriverInterface):
         timeout_time = datetime.now() + timedelta(seconds=SSH_STARTING_TIMEOUT)
 
         while True:
-            logger.exception("Trying to configure license server via CLI....")
+            logger.exception("Trying to configure License Server via CLI....")
 
             try:
                 configuration_operations = TeraVMConfigurationRunner(resource_config=resource_config,
@@ -126,12 +158,13 @@ class TeraVMVirtualChassisDriver(ResourceDriverInterface):
                 configuration_operations.configure_license_server(license_server_ip=resource_config.license_server)
 
             except Exception as e:  # todo: at least match specific exception
-                logger.exception("Unable to configure license server via CLI")
+                logger.exception("Unable to configure License Server via CLI")
 
                 if datetime.now() > timeout_time:
-                    raise Exception("Unable to perform configure license CLI operation within {} minute(s)"
+                    raise Exception("Unable to perform configure License Server CLI operation within {} minute(s)"
                                     .format(SSH_STARTING_TIMEOUT / 60))
             else:
+                logger.exception("License Server was successfully configured via CLI")
                 return
 
             time.sleep(5 * 60)
@@ -215,8 +248,11 @@ class TeraVMVirtualChassisDriver(ResourceDriverInterface):
             logger.info("Waiting for Service to be deployed... ")
             self._wait_for_service_deployment(tvm_api_client, logger)
 
-            logger.info("Configuring Executive Server")
-            tvm_api_client.configure_executive_server(ip_addr=resource_config.executive_server)
+
+            logger.info("Configuring Executive Server...")
+            self._configure_executive_server(resource_config=resource_config,
+                                             tvm_api_client=tvm_api_client,
+                                             logger=logger)
 
             resources = cPickle.loads(resource_cache)
 
